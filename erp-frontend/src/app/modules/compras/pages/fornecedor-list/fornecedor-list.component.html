@@ -1,0 +1,48 @@
+<div class="container-box">
+  <div class="card-header">
+    <h1><i class="fas fa-truck"></i> Lista de Fornecedores</h1>
+    <button class="button" routerLink="/compras/fornecedores/novo">
+      <i class="fas fa-plus"></i> Novo Fornecedor
+    </button>
+  </div>
+
+  <p class="text-light">Gerencie os fornecedores de produtos e serviços.</p>
+
+  <table *ngIf="fornecedores$ | async as fornecedores; else loadingOrError" class="table-hover">
+    <thead>
+      <tr>
+        <th>Razão Social</th>
+        <th>CNPJ</th>
+        <th>Endereço</th>
+        <th class="text-center">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let fornecedor of fornecedores">
+        <td data-label="Razão Social">{{ fornecedor.razaoSocial }}</td>
+        <td data-label="CNPJ">{{ fornecedor.cnpj }}</td>
+        <td data-label="Endereço">{{ fornecedor.endereco }}</td>
+        <td data-label="Ações" class="table-actions">
+          <button class="button icon-only" (click)="editarFornecedor(fornecedor.id)" title="Editar">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="button error icon-only" (click)="deletarFornecedor(fornecedor.id)" title="Deletar">
+            <i class="fas fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="fornecedores.length === 0">
+        <td colspan="4" class="text-center">Nenhum fornecedor cadastrado.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #loadingOrError>
+    <div class="text-center">
+      <app-loading *ngIf="!error; else errorState"></app-loading>
+      <ng-template #errorState>
+        <p class="text-error">Falha ao carregar fornecedores. Tente novamente mais tarde.</p>
+      </ng-template>
+    </div>
+  </ng-template>
+</div>

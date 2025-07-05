@@ -1,0 +1,32 @@
+<form [formGroup]="cadastroForm" (ngSubmit)="onSubmit()" class="usuario-cadastro-form">
+  <div class="form-group">
+    <label for="nomeCompleto">Nome Completo</label>
+    <input id="nomeCompleto" formControlName="nomeCompleto" placeholder="Digite o nome completo" />
+  </div>
+
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input id="email" type="email" formControlName="email" placeholder="Digite o email" />
+  </div>
+
+  <div class="form-group">
+    <label for="senhaProvisoria">Senha Provisória</label>
+    <input id="senhaProvisoria" type="password" formControlName="senhaProvisoria" placeholder="Digite a senha provisória" />
+  </div>
+
+  <div class="form-group">
+    <label for="funcao">Função do Utilizador</label>
+    <select id="funcao" formControlName="funcao">
+      <option value="" disabled selected>Selecione uma função</option>
+      <option *ngFor="let funcao of funcoes" [value]="funcao">{{ funcao }}</option>
+    </select>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="button" [disabled]="cadastroForm.invalid">Salvar</button>
+    <button type="button" class="button secondary" routerLink="/security/usuarios">Voltar</button>
+  </div>
+
+  <div *ngIf="mensagem" class="mensagem-sucesso">{{ mensagem }}</div>
+  <div *ngIf="erro" class="mensagem-erro">{{ erro }}</div>
+</form> 

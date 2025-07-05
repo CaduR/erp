@@ -1,0 +1,213 @@
+.table-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.button.icon-only {
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.button.icon-only:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.button.icon-only:first-child {
+  background-color: var(--primary-color);
+  color: white;
+  border: 1px solid var(--primary-color);
+}
+
+.button.icon-only:first-child:hover {
+  background-color: var(--primary-color-hover);
+}
+
+.button.icon-only:nth-child(2) {
+  background-color: var(--accent-color);
+  color: white;
+  border: 1px solid var(--accent-color);
+}
+
+.button.icon-only:nth-child(2):hover {
+  background-color: var(--accent-color-hover);
+}
+
+.button.icon-only:last-child {
+  background-color: var(--error-color);
+  color: white;
+  border: 1px solid var(--error-color);
+}
+
+.button.icon-only:last-child:hover {
+  background-color: var(--error-color-hover);
+}
+
+.import-section {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .table-actions {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .button.icon-only {
+    width: 1.75rem;
+    height: 1.75rem;
+    font-size: 0.75rem;
+  }
+  
+  .card-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+// Estilos para badges e indicadores
+.badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.badge.success {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.badge.error {
+  background-color: var(--error-color);
+  color: white;
+}
+
+.badge.warning {
+  background-color: var(--warning-color);
+  color: var(--text-color);
+}
+
+.text-error {
+  color: var(--error-color);
+  font-weight: 500;
+}
+
+.text-warning {
+  color: var(--warning-color);
+  font-weight: 500;
+}
+
+// Responsividade da tabela
+@media (max-width: 1024px) {
+  table {
+    font-size: 0.875rem;
+  }
+  
+  th, td {
+    padding: 0.5rem 0.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  table {
+    font-size: 0.75rem;
+  }
+  
+  th, td {
+    padding: 0.25rem 0.125rem;
+  }
+  
+  .badge {
+    font-size: 0.625rem;
+    padding: 0.125rem 0.25rem;
+  }
+}
+
+// Estilos para ícones
+th i, td i {
+  margin-right: 0.5rem;
+  width: 1rem;
+  text-align: center;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+}
+
+.loading-container i {
+  color: var(--primary-color);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-center i {
+  display: block;
+  margin: 0 auto 1rem auto;
+}
+
+// Melhorar espaçamento dos ícones nos labels
+label i {
+  margin-right: 0.5rem;
+  color: var(--primary-color);
+}
+
+// Ícones nos botões
+.button i {
+  margin-right: 0.5rem;
+}
+
+// Ícones na tabela
+td i:first-child {
+  color: var(--text-color-light);
+}
+
+// Ícones de status
+td i.fa-toggle-on {
+  color: var(--accent-color);
+}
+
+td i.fa-toggle-off {
+  color: var(--error-color);
+}
+
+// Ícones de estoque
+td i.fa-warehouse {
+  color: var(--primary-color);
+}
+
+// Ícones de categoria
+td i.fa-tags {
+  color: var(--accent-color);
+}
+
+// Ícones de preço
+td i.fa-dollar-sign {
+  color: var(--success-color, #28a745);
+}

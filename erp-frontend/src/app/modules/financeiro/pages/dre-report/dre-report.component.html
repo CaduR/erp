@@ -1,0 +1,98 @@
+<div class="container-box">
+  <div class="card-header">
+    <h1><i class="fas fa-file-invoice-dollar"></i> Demonstrativo de Resultado (DRE)</h1>
+  </div>
+
+  <p class="text-light">Visualize o desempenho financeiro da sua empresa em um período.</p>
+
+  <div class="filters">
+    <div class="form-group">
+      <label for="dataInicio">Data Início</label>
+      <input id="dataInicio" type="date" [(ngModel)]="dataInicio" (change)="loadReport()">
+    </div>
+    <div class="form-group">
+      <label for="dataFim">Data Fim</label>
+      <input id="dataFim" type="date" [(ngModel)]="dataFim" (change)="loadReport()">
+    </div>
+  </div>
+
+  <div *ngIf="dreData$ | async as dre; else loadingOrError" class="report-content">
+    <div class="section">
+      <h2>Receita Bruta de Vendas</h2>
+      <p>{{ dre.receitaBrutaVendas | currency:'BRL' }}</p>
+    </div>
+
+    <div class="section">
+      <h2>(-) Deduções de Vendas</h2>
+      <p>{{ dre.deducoesVendas | currency:'BRL' }}</p>
+    </div>
+
+    <div class="section total-line">
+      <h2>= Receita Líquida de Vendas</h2>
+      <p>{{ dre.receitaLiquidaVendas | currency:'BRL' }}</p>
+    </div>
+
+    <div class="section">
+      <h2>(-) Custo das Mercadorias Vendidas (CMV)</h2>
+      <p>{{ dre.custoMercadoriasVendidas | currency:'BRL' }}</p>
+    </div>
+
+    <div class="section total-line">
+      <h2>= Lucro Bruto</h2>
+      <p>{{ dre.lucroBruto | currency:'BRL' }}</p>
+    </div>
+
+    <div class="section">
+      <h2>(-) Despesas Operacionais</h2>
+      <ul>
+        <li>Despesas com Vendas: {{ dre.despesasComVendas | currency:'BRL' }}</li>
+        <li>Despesas Administrativas: {{ dre.despesasAdministrativas | currency:'BRL' }}</li>
+        <li>Despesas Financeiras: {{ dre.despesasFinanceiras | currency:'BRL' }}</li>
+        <li>Outras Despesas Operacionais: {{ dre.outrasDespesasOperacionais | currency:'BRL' }}</li>
+      </ul>
+      <p class="subtotal">Total Despesas Operacionais: {{ dre.totalDespesasOperacionais | currency:'BRL' }}</p>
+    </div>
+
+    <div class="section total-line">
+      <h2>= Lucro/Prejuízo Operacional</h2>
+      <p>{{ dre.lucroPrejuizoOperacional | currency:'BRL' }}</p>
+    </div>
+
+    <div class="section">
+      <h2>(+) Receitas Não Operacionais</h2>
+      <p>{{ dre.receitasNaoOperacionais | currency:'BRL' }}</p>
+    </div>
+
+    <div class="section">
+      <h2>(-) Despesas Não Operacionais</h2>
+      <p>{{ dre.despesasNaoOperacionais | currency:'BRL' }}</p>
+    </div>
+
+    <div class="section total-line">
+      <h2>= Lucro/Prejuízo Antes do IR e CSLL</h2>
+      <p>{{ dre.lucroPrejuizoAntesIRCSLL | currency:'BRL' }}</p>
+    </div>
+
+    <div class="section">
+      <h2>(-) Imposto de Renda e CSLL</h2>
+      <ul>
+        <li>Imposto de Renda: {{ dre.impostoRenda | currency:'BRL' }}</li>
+        <li>Contribuição Social: {{ dre.contribuicaoSocial | currency:'BRL' }}</li>
+      </ul>
+    </div>
+
+    <div class="section final-result">
+      <h2>= Lucro Líquido do Exercício</h2>
+      <p>{{ dre.lucroLiquidoExercicio | currency:'BRL' }}</p>
+    </div>
+  </div>
+
+  <ng-template #loadingOrError>
+    <div class="text-center">
+      <app-loading *ngIf="!error; else errorState"></app-loading>
+      <ng-template #errorState>
+        <p class="text-error">Falha ao carregar DRE. Tente novamente mais tarde.</p>
+      </ng-template>
+    </div>
+  </ng-template>
+</div>

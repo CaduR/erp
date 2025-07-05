@@ -1,0 +1,58 @@
+<div class="container-box">
+  <div class="card-header">
+    <h1><i class="fas fa-shopping-bag"></i> Lista de Vendas</h1>
+  </div>
+
+  <p class="text-light">Visualize o histórico de vendas realizadas.</p>
+
+  <table *ngIf="vendas$ | async as vendas; else loadingOrError" class="table-hover">
+    <thead>
+      <tr>
+        <th>ID da Venda</th>
+        <th>Cliente</th>
+        <th>Data da Venda</th>
+        <th>Valor Total</th>
+        <th>Status NF</th>
+        <th class="text-center">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let venda of vendas">
+        <td data-label="ID da Venda">{{ venda.id }}</td>
+        <td data-label="Cliente">{{ venda.clienteNome }}</td>
+        <td data-label="Data da Venda">{{ venda.dataVenda | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td data-label="Valor Total">{{ venda.valorTotal | currency:'BRL' }}</td>
+        <td data-label="Status NF">
+          <span class="badge" [ngClass]="{
+            'success': venda.notaFiscalStatus === 'EMITIDA',
+            'warning': venda.notaFiscalStatus === 'PENDENTE',
+            'error': venda.notaFiscalStatus === 'ERRO' || venda.notaFiscalStatus === 'CANCELADA'
+          }">{{ venda.notaFiscalStatus || 'N/A' }}</span>
+        </td>
+        <td data-label="Ações" class="table-actions">
+          <button class="button icon-only" (click)="verDetalhes(venda.id)" title="Ver Detalhes">
+            <i class="fas fa-eye"></i>
+          </button>
+          <button *ngIf="!venda.notaFiscalId" class="button success icon-only" (click)="emitirNota(venda.id)" title="Emitir Nota Fiscal">
+            <i class="fas fa-file-invoice"></i>
+          </button>
+          <button class="button error icon-only" (click)="deletarVenda(venda.id)" title="Deletar Venda">
+            <i class="fas fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="vendas.length === 0">
+        <td colspan="6" class="text-center">Nenhuma venda encontrada.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #loadingOrError>
+    <div class="text-center">
+      <app-loading *ngIf="!error; else errorState"></app-loading>
+      <ng-template #errorState>
+        <p class="text-error">Falha ao carregar vendas. Tente novamente mais tarde.</p>
+      </ng-template>
+    </div>
+  </ng-template>
+</div>

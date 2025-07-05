@@ -1,0 +1,53 @@
+<div class="container-box">
+  <div class="card-header">
+    <h1><i class="fas fa-balance-scale"></i> Balanço Patrimonial</h1>
+  </div>
+
+  <p class="text-light">Visualize a posição financeira da sua empresa em uma data específica.</p>
+
+  <div class="filters">
+    <div class="form-group">
+      <label for="dataReferencia">Data de Referência</label>
+      <input id="dataReferencia" type="date" [(ngModel)]="dataReferencia" (change)="loadReport()">
+    </div>
+  </div>
+
+  <div *ngIf="balancoData$ | async as balanco; else loadingOrError" class="report-content">
+    <div class="section">
+      <h2>Ativo</h2>
+      <ul>
+        <li>Ativo Circulante: {{ balanco.ativoCirculante | currency:'BRL' }}</li>
+        <li>Ativo Não Circulante: {{ balanco.ativoNaoCirculante | currency:'BRL' }}</li>
+      </ul>
+      <p class="total-line">Total do Ativo: {{ balanco.totalAtivo | currency:'BRL' }}</p>
+    </div>
+
+    <div class="section">
+      <h2>Passivo</h2>
+      <ul>
+        <li>Passivo Circulante: {{ balanco.passivoCirculante | currency:'BRL' }}</li>
+        <li>Passivo Não Circulante: {{ balanco.passivoNaoCirculante | currency:'BRL' }}</li>
+      </ul>
+      <p class="total-line">Total do Passivo: {{ balanco.totalPassivo | currency:'BRL' }}</p>
+    </div>
+
+    <div class="section">
+      <h2>Patrimônio Líquido</h2>
+      <p class="total-line">Patrimônio Líquido: {{ balanco.patrimonioLiquido | currency:'BRL' }}</p>
+    </div>
+
+    <div class="section final-result">
+      <h2>Total Passivo + Patrimônio Líquido</h2>
+      <p>{{ balanco.totalPassivoPatrimonioLiquido | currency:'BRL' }}</p>
+    </div>
+  </div>
+
+  <ng-template #loadingOrError>
+    <div class="text-center">
+      <app-loading *ngIf="!error; else errorState"></app-loading>
+      <ng-template #errorState>
+        <p class="text-error">Falha ao carregar Balanço Patrimonial. Tente novamente mais tarde.</p>
+      </ng-template>
+    </div>
+  </ng-template>
+</div>

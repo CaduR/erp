@@ -1,0 +1,73 @@
+<div class="container-box">
+  <div class="card-header">
+    <h1><i class="fas fa-chart-line"></i> Dashboard ERP</h1>
+    <p class="text-light">Visão geral do seu negócio</p>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-box"></i></div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.totalProdutos }}</div>
+        <div class="stat-label">Total de Produtos</div>
+        <div *ngIf="stats.produtosEstoqueBaixo > 0" class="stat-warning">
+          <i class="fas fa-exclamation-triangle"></i> {{ stats.produtosEstoqueBaixo }} com estoque baixo
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-users"></i></div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.totalClientes }}</div>
+        <div class="stat-label">Clientes Cadastrados</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-truck"></i></div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.totalFornecedores }}</div>
+        <div class="stat-label">Fornecedores</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-hand-holding-usd"></i></div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.contasReceberAbertas }}</div>
+        <div class="stat-label">Contas a Receber</div>
+        <div class="stat-amount">{{ stats.valorContasReceberAbertas | currency:'BRL' }}</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.contasPagarAbertas }}</div>
+        <div class="stat-label">Contas a Pagar</div>
+        <div class="stat-amount">{{ stats.valorContasPagarAbertas | currency:'BRL' }}</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-shopping-cart"></i></div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.vendasHoje | currency:'BRL' }}</div>
+        <div class="stat-label">Vendas Hoje</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.vendasMes | currency:'BRL' }}</div>
+        <div class="stat-label">Vendas Mês</div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="text-center">
+    <p class="text-error">Falha ao carregar dados do dashboard. Tente novamente mais tarde.</p>
+  </div>
+</div>

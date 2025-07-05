@@ -1,0 +1,62 @@
+<div class="container-box">
+  <div class="card-header">
+    <h1><i class="fas fa-file-invoice"></i> {{ isEditMode ? 'Editar Pedido de Compra' : 'Novo Pedido de Compra' }}</h1>
+  </div>
+
+  <form [formGroup]="pedidoCompraForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="fornecedorId">Fornecedor</label>
+      <select id="fornecedorId" formControlName="fornecedorId" (change)="onFornecedorChange()">
+        <option [ngValue]="null">Selecione um fornecedor</option>
+        <option *ngFor="let fornecedor of fornecedores$ | async" [ngValue]="fornecedor.id">{{ fornecedor.razaoSocial }}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="dataPedido">Data do Pedido</label>
+      <input id="dataPedido" type="date" formControlName="dataPedido">
+    </div>
+
+    <hr>
+    <h3>Itens do Pedido</h3>
+
+    <div formArrayName="itens">
+      <div *ngFor="let itemForm of itens.controls; let i = index" [formGroupName]="i" class="item-row">
+        <div class="form-group">
+          <label [for]="'produtoId-' + i">Produto</label>
+          <select [id]="'produtoId-' + i" formControlName="produtoId" (change)="onProdutoChange(i)">
+            <option [ngValue]="null">Selecione um produto</option>
+            <option *ngFor="let produto of produtos$ | async" [ngValue]="produto.id">{{ produto.nome }} (Estoque: {{ produto.quantidadeEstoque }})</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label [for]="'quantidade-' + i">Quantidade</label>
+          <input [id]="'quantidade-' + i" type="number" formControlName="quantidade" (input)="calcularValorTotal()">
+        </div>
+
+        <div class="form-group">
+          <label [for]="'valorUnitario-' + i">Valor Unitário</label>
+          <input [id]="'valorUnitario-' + i" type="number" formControlName="valorUnitario" (input)="calcularValorTotal()">
+        </div>
+
+        <button type="button" class="button error icon-only" (click)="removerItem(i)">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </div>
+
+    <button type="button" class="button secondary" (click)="adicionarItem()">
+      <i class="fas fa-plus"></i> Adicionar Item
+    </button>
+
+    <div class="total-section">
+      <strong>Valor Total do Pedido:</strong> {{ pedidoCompraForm.get('valorTotal')?.value | currency:'BRL' }}
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="button" [disabled]="pedidoCompraForm.invalid || itens.length === 0">Salvar</button>
+      <button type="button" class="button secondary" routerLink="/compras/pedidos-compra">Cancelar</button>
+    </div>
+  </form>
+</div>

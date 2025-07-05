@@ -1,0 +1,59 @@
+<div class="container-box">
+  <div class="card-header">
+    <h1><i class="fas fa-money-bill-wave"></i> Contas a Pagar</h1>
+    <button class="button" routerLink="/financeiro/contas-a-pagar/novo">
+      <i class="fas fa-plus"></i> Nova Conta
+    </button>
+  </div>
+
+  <p class="text-light">Gerencie suas contas a pagar.</p>
+
+  <table *ngIf="contasPagar$ | async as contas; else loadingOrError" class="table-hover">
+    <thead>
+      <tr>
+        <th>Descrição</th>
+        <th>Valor</th>
+        <th>Vencimento</th>
+        <th>Status</th>
+        <th class="text-center">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let conta of contas">
+        <td data-label="Descrição">{{ conta.descricao }}</td>
+        <td data-label="Valor">{{ conta.valor | currency:'BRL' }}</td>
+        <td data-label="Vencimento">{{ conta.dataVencimento | date:'dd/MM/yyyy' }}</td>
+        <td data-label="Status">
+          <span class="badge" [ngClass]="{
+            'success': conta.status === 'PAGO',
+            'error': conta.status === 'ATRASADO',
+            'warning': conta.status === 'PENDENTE'
+          }">{{ conta.status }}</span>
+        </td>
+        <td data-label="Ações" class="table-actions">
+          <button *ngIf="conta.status === 'PENDENTE'" class="button success icon-only" (click)="pagarConta(conta.id)" title="Marcar como Paga">
+            <i class="fas fa-check"></i>
+          </button>
+          <button class="button icon-only" (click)="editarConta(conta.id)" title="Editar">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="button error icon-only" (click)="deletarConta(conta.id)" title="Deletar">
+            <i class="fas fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="contas.length === 0">
+        <td colspan="5" class="text-center">Nenhuma conta a pagar encontrada.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #loadingOrError>
+    <div class="text-center">
+      <app-loading *ngIf="!error; else errorState"></app-loading>
+      <ng-template #errorState>
+        <p class="text-error">Falha ao carregar contas a pagar. Tente novamente mais tarde.</p>
+      </ng-template>
+    </div>
+  </ng-template>
+</div>

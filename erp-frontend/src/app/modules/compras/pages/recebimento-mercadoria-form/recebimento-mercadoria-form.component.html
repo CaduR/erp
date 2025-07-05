@@ -1,0 +1,29 @@
+<div class="container-box">
+  <div class="card-header">
+    <h1><i class="fas fa-boxes"></i> Receber Mercadorias</h1>
+  </div>
+
+  <p class="text-light">Registre as quantidades recebidas para o Pedido de Compra #{{ pedidoCompraId }}.</p>
+
+  <form [formGroup]="recebimentoForm" (ngSubmit)="onSubmit()" *ngIf="pedidoCompra">
+    <div formArrayName="itensRecebidos">
+      <div *ngFor="let itemForm of itensRecebidos.controls; let i = index" [formGroupName]="i" class="item-row">
+        <div class="form-group">
+          <label>Produto: {{ pedidoCompra.itens[i].produto?.nome }}</label>
+          <p class="text-light">Quantidade Pedida: {{ pedidoCompra.itens[i].quantidade }}</p>
+          <input type="number" formControlName="quantidadeRecebida" placeholder="Quantidade Recebida" min="0">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="button" [disabled]="recebimentoForm.invalid">Registrar Recebimento</button>
+      <button type="button" class="button secondary" (click)="voltar()">Cancelar</button>
+    </div>
+  </form>
+
+  <div *ngIf="!pedidoCompra" class="text-center">
+    <app-loading></app-loading>
+    <p class="text-light">Carregando detalhes do pedido...</p>
+  </div>
+</div>

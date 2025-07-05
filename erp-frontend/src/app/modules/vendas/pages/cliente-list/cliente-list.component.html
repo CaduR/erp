@@ -1,0 +1,50 @@
+<div class="container-box">
+  <div class="card-header">
+    <h1><i class="fas fa-users"></i> Lista de Clientes</h1>
+    <button class="button" routerLink="/vendas/clientes/novo">
+      <i class="fas fa-plus"></i> Novo Cliente
+    </button>
+  </div>
+
+  <p class="text-light">Gerencie os clientes da sua empresa.</p>
+
+  <table *ngIf="clientes$ | async as clientes; else loadingOrError" class="table-hover">
+    <thead>
+      <tr>
+        <th>Nome / Razão Social</th>
+        <th>CPF / CNPJ</th>
+        <th>Email</th>
+        <th>Telefone</th>
+        <th class="text-center">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let cliente of clientes">
+        <td data-label="Nome">{{ cliente.nome }}</td>
+        <td data-label="Documento">{{ cliente.cpf || cliente.cnpj }}</td>
+        <td data-label="Email">{{ cliente.email }}</td>
+        <td data-label="Telefone">{{ cliente.telefone }}</td>
+        <td data-label="Ações" class="table-actions">
+          <button class="button icon-only" (click)="editarCliente(cliente.id)" title="Editar">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="button error icon-only" (click)="deletarCliente(cliente.id)" title="Deletar">
+            <i class="fas fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="clientes.length === 0">
+        <td colspan="5" class="text-center">Nenhum cliente cadastrado.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #loadingOrError>
+    <div class="text-center">
+      <app-loading *ngIf="!error; else errorState"></app-loading>
+      <ng-template #errorState>
+        <p class="text-error">Falha ao carregar clientes. Tente novamente mais tarde.</p>
+      </ng-template>
+    </div>
+  </ng-template>
+</div>

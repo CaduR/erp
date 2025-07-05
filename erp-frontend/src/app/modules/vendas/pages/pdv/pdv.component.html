@@ -1,0 +1,85 @@
+<div class="container-box">
+  <div class="card-header">
+    <h1><i class="fas fa-cash-register"></i> Ponto de Venda (PDV)</h1>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="finalizarVenda()">
+    <div class="form-group">
+      <label for="clienteId">Cliente</label>
+      <select id="clienteId" formControlName="clienteId">
+        <option value="">Selecione...</option>
+        <option *ngFor="let c of clientes" [value]="c.id">{{ c.nome }} ({{ c.cpf || c.cnpj }})</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="produtoSelecionadoId">Adicionar Produto</label>
+      <div class="input-group">
+        <select id="produtoSelecionadoId" formControlName="produtoSelecionadoId" (change)="onProdutoChange()">
+          <option value="">Selecione...</option>
+          <option *ngFor="let p of produtos" [value]="p.id">{{ p.nome }} ({{ p.codigo }}) - Estoque: {{ p.quantidadeEstoque }}</option>
+        </select>
+        <div class="custom-qty">
+          <button type="button" (click)="decrement()" class="button icon-only"><i class="fas fa-minus"></i></button>
+          <input type="number" formControlName="quantidadeSelecionada" class="qty-input" min="0" (input)="verificarEstoque()"/>
+          <button type="button" (click)="increment()" class="button icon-only"><i class="fas fa-plus"></i></button>
+        </div>
+        <button type="button" class="button" (click)="adicionarProduto()">Adicionar</button>
+      </div>
+    </div>
+
+    <div *ngIf="avisoEstoque" class="alert alert-warning">
+      <i class="fas fa-exclamation-triangle"></i> {{ avisoEstoque }}
+    </div>
+
+    <div *ngIf="itens.length > 0" class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Produto</th>
+            <th>Qtd</th>
+            <th>Estoque</th>
+            <th>Preço Unit.</th>
+            <th>Subtotal</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of itens; let i = index" [class.table-warning]="item.quantidade > item.produto.quantidadeEstoque">
+            <td>{{ item.produto.nome }}</td>
+            <td>{{ item.quantidade }}</td>
+            <td [ngClass]="{'text-danger': item.produto.quantidadeEstoque < item.quantidade}">
+              {{ item.produto.quantidadeEstoque }}
+              <i *ngIf="item.produto.quantidadeEstoque < item.quantidade" class="fas fa-exclamation-circle text-danger"></i>
+            </td>
+            <td>{{ item.produto.preco | currency:'BRL' }}</td>
+            <td>{{ (item.produto.preco * item.quantidade) | currency:'BRL' }}</td>
+            <td>
+              <button type="button" class="button error icon-only" (click)="removerItem(i)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="total-section">
+        <strong>Total:</strong> {{ total | currency:'BRL' }}
+      </div>
+
+      <div *ngIf="temEstoqueInsuficiente()" class="alert alert-danger">
+        <i class="fas fa-exclamation-circle"></i>
+        <strong>Atenção:</strong> Alguns produtos têm quantidade maior que o estoque disponível!
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="button success" [disabled]="form.invalid || itens.length === 0 || loading || temEstoqueInsuficiente()">
+        <i *ngIf="loading" class="fas fa-spinner fa-spin"></i>
+        {{ loading ? 'Processando...' : 'Finalizar Venda' }}
+      </button>
+    </div>
+
+    <div *ngIf="mensagem" class="alert alert-success mt-3">{{ mensagem }}</div>
+    <div *ngIf="erro" class="alert alert-danger mt-3">{{ erro }}</div>
+  </form>
+</div>

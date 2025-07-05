@@ -1,0 +1,23 @@
+<div class="app-container">
+  <app-sidebar [open]="sidebarOpen" (toggleSidebar)="toggleSidebar()"></app-sidebar>
+  <div class="main-content" [class.sidebar-expanded]="sidebarOpen">
+    <div class="main-toolbar">
+      <input class="global-search" type="search" placeholder="Buscar no sistema..." aria-label="Buscar no sistema" />
+      <div class="quick-actions">
+        <button class="quick-btn" aria-label="Novo cadastro">➕</button>
+        <button class="quick-btn" aria-label="Notificações"><span class="notif-icon">🔔</span><span class="notif-badge">2</span></button>
+      </div>
+    </div>
+    <div *ngIf="loading" class="loader-overlay" aria-live="polite" aria-busy="true">
+      <div class="loader"></div>
+    </div>
+    <main class="app-main" tabindex="0">
+      <router-outlet></router-outlet>
+    </main>
+    <footer class="app-footer">
+      <p>&copy; 2024 Sistema ERP - Desenvolvido com Angular e Spring Boot</p>
+    </footer>
+    <div *ngIf="toastMessage" class="toast" [ngClass]="toastType" role="status" aria-live="polite">{{ toastMessage }}</div>
+  </div>
+  <!-- O menu externo já é renderizado pelo SidebarComponent -->
+</div>

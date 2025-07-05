@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15
+    container_name: erp-postgres
+    environment:
+      POSTGRES_DB: erp
+      POSTGRES_USER: cadu
+      POSTGRES_PASSWORD: cadu
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./erp/dados-exemplo.sql:/docker-entrypoint-initdb.d/dados-exemplo.sql
+    networks:
+      - erp-network
+
+  # Backend Spring Boot
+  backend:
+    build:
+      context: ./erp
+      dockerfile: Dockerfile
+    container_name: erp-backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/erp
+      SPRING_DATASOURCE_USERNAME: cadu
+      SPRING_DATASOURCE_PASSWORD: cadu
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      - postgres
+    networks:
+      - erp-network
+    volumes:
+      - ./erp:/app
+      - /app/target
+
+  # Frontend Angular (Nginx)
+  frontend:
+    build:
+      context: ./erp-frontend
+      dockerfile: Dockerfile
+    container_name: erp-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    networks:
+      - erp-network
+
+volumes:
+  postgres_data:
+
+networks:
+  erp-network:
+    driver: bridge 

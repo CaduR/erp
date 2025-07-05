@@ -1,0 +1,57 @@
+<div class="container-box">
+  <div class="card-header">
+    <h1><i class="fas fa-chart-area"></i> Relatório de Fluxo de Caixa</h1>
+  </div>
+
+  <p class="text-light">Visualize o fluxo de caixa em um período específico.</p>
+
+  <div class="filters">
+    <div class="form-group">
+      <label for="dataInicio">Data Início</label>
+      <input id="dataInicio" type="date" [(ngModel)]="dataInicio" (change)="loadReport()">
+    </div>
+    <div class="form-group">
+      <label for="dataFim">Data Fim</label>
+      <input id="dataFim" type="date" [(ngModel)]="dataFim" (change)="loadReport()">
+    </div>
+  </div>
+
+  <table *ngIf="reportData$ | async as data; else loadingOrError" class="table-hover">
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Descrição</th>
+        <th>Tipo</th>
+        <th>Valor</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of data">
+        <td data-label="Data">{{ item.data | date:'dd/MM/yyyy' }}</td>
+        <td data-label="Descrição">{{ item.descricao }}</td>
+        <td data-label="Tipo">
+          <span class="badge" [ngClass]="{
+            'success': item.tipo === 'RECEITA',
+            'error': item.tipo === 'DESPESA'
+          }">{{ item.tipo }}</span>
+        </td>
+        <td data-label="Valor" [ngClass]="{
+          'text-success': item.tipo === 'RECEITA',
+          'text-error': item.tipo === 'DESPESA'
+        }">{{ item.valor | currency:'BRL' }}</td>
+      </tr>
+      <tr *ngIf="data.length === 0">
+        <td colspan="4" class="text-center">Nenhum dado encontrado para o relatório.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #loadingOrError>
+    <div class="text-center">
+      <app-loading *ngIf="!error; else errorState"></app-loading>
+      <ng-template #errorState>
+        <p class="text-error">Falha ao carregar relatório. Tente novamente mais tarde.</p>
+      </ng-template>
+    </div>
+  </ng-template>
+</div>

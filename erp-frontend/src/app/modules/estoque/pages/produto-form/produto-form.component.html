@@ -1,0 +1,79 @@
+<div class="container-box">
+  <div class="card-header">
+    <h1>
+      <i class="fas" [ngClass]="{
+        'fa-plus': !isEditMode && !isViewMode,
+        'fa-edit': isEditMode,
+        'fa-eye': isViewMode
+      }"></i> 
+      {{ 
+        isViewMode ? 'Visualizar Produto' : 
+        isEditMode ? 'Editar Produto' : 
+        'Novo Produto' 
+      }}
+    </h1>
+  </div>
+
+  <form [formGroup]="produtoForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="codigo"><i class="fas fa-barcode"></i> Código</label>
+      <input id="codigo" formControlName="codigo" placeholder="Ex: PROD-001">
+      <!-- Adicionar mensagens de erro -->
+    </div>
+
+    <div class="form-group">
+      <label for="nome"><i class="fas fa-box"></i> Nome</label>
+      <input id="nome" formControlName="nome" placeholder="Ex: Camiseta Branca">
+    </div>
+
+    <div class="form-group">
+      <label for="descricao"><i class="fas fa-info-circle"></i> Descrição</label>
+      <input id="descricao" formControlName="descricao" placeholder="Ex: Camiseta Branca Algodão">
+    </div>
+
+    <div class="form-group">
+      <label for="preco"><i class="fas fa-dollar-sign"></i> Preço</label>
+      <input id="preco" type="number" formControlName="preco" placeholder="0,00">
+    </div>
+
+    <div class="form-group">
+      <label for="quantidadeEstoque"><i class="fas fa-warehouse"></i> Quantidade em Estoque</label>
+      <input id="quantidadeEstoque" type="number" formControlName="quantidadeEstoque" placeholder="0">
+    </div>
+
+    <div class="form-group">
+      <label for="quantidadeMinima"><i class="fas fa-exclamation-triangle"></i> Quantidade Mínima</label>
+      <input id="quantidadeMinima" type="number" formControlName="quantidadeMinima" placeholder="0">
+    </div>
+
+    <div class="form-group">
+      <label for="categoria"><i class="fas fa-tags"></i> Categoria</label>
+      <input id="categoria" formControlName="categoria" placeholder="Ex: Camisetas">
+    </div>
+
+    <div class="form-group">
+      <label for="unidadeMedida"><i class="fas fa-ruler"></i> Unidade de Medida</label>
+      <input id="unidadeMedida" formControlName="unidadeMedida" placeholder="Ex: un">
+    </div>
+
+    <div class="form-group" *ngIf="isEditMode">
+      <label for="ativo"><i class="fas fa-toggle-on"></i> Ativo</label>
+      <input id="ativo" type="checkbox" formControlName="ativo">
+    </div>
+
+    <div class="form-actions">
+      <button *ngIf="!isViewMode" type="submit" class="button" [disabled]="produtoForm.invalid">
+        <i class="fas" [ngClass]="isEditMode ? 'fa-save' : 'fa-plus'"></i>
+        {{ isEditMode ? 'Atualizar' : 'Salvar' }}
+      </button>
+      <button *ngIf="isViewMode" type="button" class="button" routerLink="/estoque/produtos">
+        <i class="fas fa-arrow-left"></i>
+        Voltar
+      </button>
+      <button *ngIf="!isViewMode" type="button" class="button secondary" routerLink="/estoque/produtos">
+        <i class="fas fa-times"></i>
+        Cancelar
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,52 @@
+<div class="sidebar" 
+     [class.expanded]="open"
+     (mouseenter)="expandSidebar()"
+     (mouseleave)="collapseSidebar()"
+     *ngIf="isLoggedIn">
+  <div class="header">
+    <div class="logo-container" [class.expanded]="open">
+      <img *ngIf="companyLogo" [src]="companyLogo" [alt]="companyName" class="company-logo" />
+      <div class="company-name" *ngIf="open">{{ companyName }}</div>
+    </div>
+  </div>
+  
+  <div class="content">
+    <div class="link" *ngFor="let item of menuItems" 
+         [class.active]="isActive(item.route)"
+         [class.has-children]="item.children && item.children.length > 0">
+      <div class="content" (click)="handleItemClick(item)">
+        <div class="icon"><i [class]="item.icon"></i></div>
+        <div class="title">{{ item.title }}</div>
+        <div class="badge" *ngIf="item.badge" 
+             [class.badge-alert]="item.badgeType === 'alert'">
+          {{ item.badge }}
+        </div>
+        <div class="expand-icon" *ngIf="item.children && item.children.length > 0"
+             [class.expanded]="item.expanded"><i class="fas fa-chevron-right"></i></div>
+      </div>
+      
+      <div class="children" *ngIf="item.children && item.children.length > 0 && item.expanded">
+        <div class="link" *ngFor="let child of item.children"
+             [class.active]="isActive(child.route)"
+             (click)="navigateTo(child.route)">
+          <div class="content">
+            <div class="icon"><i [class]="child.icon"></i></div>
+            <div class="title">{{ child.title }}</div>
+            <div class="badge" *ngIf="child.badge" 
+                 [class.badge-alert]="item.badgeType === 'alert'">
+              {{ child.badge }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="link" (click)="logout()">
+      <div class="content">
+        <div class="icon"><i class="fas fa-sign-out-alt"></i></div>
+        <div class="title">Sair</div>
+      </div>
+    </div>
+  </div>
+</div>

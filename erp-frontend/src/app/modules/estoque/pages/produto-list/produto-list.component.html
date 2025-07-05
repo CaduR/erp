@@ -1,0 +1,85 @@
+<div class="container-box">
+  <div class="card-header">
+    <h1><i class="fas fa-boxes"></i> Lista de Produtos</h1>
+    <button class="button" routerLink="/estoque/produtos/novo">
+      <i class="fas fa-plus"></i> Novo Produto
+    </button>
+    <div class="import-section">
+      <input type="file" #fileUpload (change)="onFileSelected($event)" accept=".csv" style="display: none;">
+      <button class="button" (click)="fileUpload.click()">
+        <i class="fas fa-upload"></i> Importar CSV
+      </button>
+    </div>
+  </div>
+
+  <p class="text-light"><i class="fas fa-info-circle"></i> Aqui você pode ver todos os produtos cadastrados no sistema.</p>
+
+  <table *ngIf="produtos$ | async as produtos; else loadingOrError" class="table-hover">
+    <thead>
+      <tr>
+        <th><i class="fas fa-barcode"></i> Código</th>
+        <th><i class="fas fa-box"></i> Nome</th>
+        <th><i class="fas fa-info-circle"></i> Descrição</th>
+        <th><i class="fas fa-dollar-sign"></i> Preço</th>
+        <th><i class="fas fa-warehouse"></i> Estoque</th>
+        <th><i class="fas fa-tags"></i> Categoria</th>
+        <th><i class="fas fa-toggle-on"></i> Status</th>
+        <th class="text-center"><i class="fas fa-cogs"></i> Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let produto of produtos">
+        <td data-label="Código"><i class="fas fa-barcode"></i> {{ produto.codigo }}</td>
+        <td data-label="Nome"><i class="fas fa-box"></i> {{ produto.nome }}</td>
+        <td data-label="Descrição"><i class="fas fa-info-circle"></i> {{ produto.descricao || 'N/A' }}</td>
+        <td data-label="Preço"><i class="fas fa-dollar-sign"></i> {{ produto.preco | currency:'BRL' }}</td>
+        <td data-label="Estoque">
+          <i class="fas fa-warehouse"></i>
+          <span [ngClass]="{
+            'text-error': produto.quantidadeEstoque <= produto.quantidadeMinima,
+            'text-warning': produto.quantidadeEstoque <= produto.quantidadeMinima * 2
+          }">
+            {{ produto.quantidadeEstoque }} {{ produto.unidadeMedida }}
+          </span>
+        </td>
+        <td data-label="Categoria"><i class="fas fa-tags"></i> {{ produto.categoria }}</td>
+        <td data-label="Status">
+          <i class="fas" [ngClass]="produto.ativo ? 'fa-toggle-on' : 'fa-toggle-off'"></i>
+          <span class="badge" [ngClass]="produto.ativo ? 'success' : 'error'">
+            {{ produto.ativo ? 'Ativo' : 'Inativo' }}
+          </span>
+        </td>
+        <td data-label="Ações" class="table-actions">
+          <button class="button icon-only" (click)="visualizarProduto(produto.id)" title="Visualizar">
+            <i class="fas fa-eye"></i>
+          </button>
+          <button class="button icon-only" (click)="editarProduto(produto.id)" title="Editar">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="button error icon-only" (click)="deletarProduto(produto.id)" title="Deletar">
+            <i class="fas fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="produtos.length === 0">
+        <td colspan="8" class="text-center">
+          <i class="fas fa-box-open fa-2x text-light"></i>
+          <p>Nenhum produto cadastrado ainda.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #loadingOrError>
+    <div class="text-center">
+      <div *ngIf="!error; else errorState" class="loading-container">
+        <i class="fas fa-spinner fa-spin fa-2x"></i>
+        <p>Carregando produtos...</p>
+      </div>
+      <ng-template #errorState>
+        <i class="fas fa-exclamation-triangle fa-2x text-error"></i>
+        <p class="text-error">Falha ao carregar produtos. Tente novamente mais tarde.</p>
+      </ng-template>
+    </div>
+  </ng-template>
+</div>

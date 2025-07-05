@@ -1,0 +1,59 @@
+<div class="container-box">
+  <div class="card-header">
+    <h1><i class="fas fa-cash-register"></i> Fluxo de Caixa</h1>
+  </div>
+
+  <p class="text-light">Visualize as movimentações de caixa e o saldo atual.</p>
+
+  <div class="filters">
+    <div class="form-group">
+      <label for="dataInicio">Data Início</label>
+      <input id="dataInicio" type="date" [(ngModel)]="dataInicio" (change)="carregarFluxoCaixa()">
+    </div>
+    <div class="form-group">
+      <label for="dataFim">Data Fim</label>
+      <input id="dataFim" type="date" [(ngModel)]="dataFim" (change)="carregarFluxoCaixa()">
+    </div>
+  </div>
+
+  <div class="saldo-atual">
+    <h3>Saldo Atual: <span [ngClass]="{'text-success': saldoAtual > 0, 'text-error': saldoAtual < 0}">{{ saldoAtual | currency:'BRL' }}</span></h3>
+  </div>
+
+  <table *ngIf="lancamentos$ | async as lancamentos; else loadingOrError" class="table-hover">
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Descrição</th>
+        <th>Tipo</th>
+        <th>Valor</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let lancamento of lancamentos">
+        <td data-label="Data">{{ lancamento.data | date:'dd/MM/yyyy' }}</td>
+        <td data-label="Descrição">{{ lancamento.descricao }}</td>
+        <td data-label="Tipo">
+          <span class="badge" [ngClass]="{'success': lancamento.tipo === 'RECEITA', 'error': lancamento.tipo === 'DESPESA'}">
+            {{ lancamento.tipo }}
+          </span>
+        </td>
+        <td data-label="Valor" [ngClass]="{'text-success': lancamento.tipo === 'RECEITA', 'text-error': lancamento.tipo === 'DESPESA'}">
+          {{ lancamento.valor | currency:'BRL' }}
+        </td>
+      </tr>
+      <tr *ngIf="lancamentos.length === 0">
+        <td colspan="4" class="text-center">Nenhum lançamento encontrado para o período.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #loadingOrError>
+    <div class="text-center">
+      <app-loading *ngIf="!error; else errorState"></app-loading>
+      <ng-template #errorState>
+        <p class="text-error">Falha ao carregar fluxo de caixa. Tente novamente mais tarde.</p>
+      </ng-template>
+    </div>
+  </ng-template>
+</div>

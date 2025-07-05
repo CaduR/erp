@@ -1,0 +1,153 @@
+<div class="container-box">
+  <div class="card-header">
+    <h1><i class="fas fa-building"></i> Configuração da Empresa</h1>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="nomeEmpresa">Nome da Empresa *</label>
+      <input
+        id="nomeEmpresa"
+        type="text"
+        formControlName="nomeEmpresa"
+        placeholder="Digite o nome da sua empresa"
+      />
+      <div *ngIf="form.get('nomeEmpresa')?.invalid && form.get('nomeEmpresa')?.touched" class="error-message">
+        Nome da empresa é obrigatório
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="cnpj">CNPJ</label>
+      <input
+        id="cnpj"
+        type="text"
+        formControlName="cnpj"
+        placeholder="Ex: 00.000.000/0001-00"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="endereco">Endereço</label>
+      <input
+        id="endereco"
+        type="text"
+        formControlName="endereco"
+        placeholder="Ex: Rua Exemplo, 123 - Cidade"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="telefone">Telefone</label>
+      <input
+        id="telefone"
+        type="text"
+        formControlName="telefone"
+        placeholder="Ex: (11) 99999-9999"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        id="email"
+        type="email"
+        formControlName="email"
+        placeholder="Ex: contato@empresa.com"
+      />
+      <div *ngIf="form.get('email')?.invalid && form.get('email')?.touched" class="error-message">
+        Email inválido
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Logo da Empresa</label>
+      <div class="logo-options">
+        <div class="option-tabs">
+          <button
+            type="button"
+            class="tab-button"
+            [class.active]="logoMethod === 'url'"
+            (click)="setLogoMethod('url')"
+          >
+            URL da Imagem
+          </button>
+          <button
+            type="button"
+            class="tab-button"
+            [class.active]="logoMethod === 'upload'"
+            (click)="setLogoMethod('upload')"
+          >
+            Upload de Arquivo
+          </button>
+        </div>
+
+        <div *ngIf="logoMethod === 'url'" class="option-content">
+          <input
+            type="url"
+            formControlName="logoUrl"
+            placeholder="https://exemplo.com/logo.png"
+          />
+          <div class="help-text">
+            Cole aqui a URL da imagem do logo da sua empresa
+          </div>
+        </div>
+
+        <div *ngIf="logoMethod === 'upload'" class="option-content">
+          <div class="upload-area"
+               (click)="fileInput.click()"
+               (dragover)="onDragOver($event)"
+               (dragleave)="onDragLeave($event)"
+               (drop)="onDrop($event)"
+               [class.dragover]="isDragOver">
+            <div class="upload-content">
+              <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+              <div class="upload-text">
+                <strong>Clique para selecionar</strong> ou arraste uma imagem aqui
+              </div>
+              <div class="upload-hint">
+                Formatos: JPG, PNG, GIF (máx. 2MB)
+              </div>
+            </div>
+            <input
+              #fileInput
+              type="file"
+              accept="image/*"
+              (change)="onFileSelected($event)"
+              style="display: none;"
+            />
+          </div>
+          <div *ngIf="selectedFile" class="selected-file">
+            <span>Arquivo selecionado: {{ selectedFile.name }}</span>
+            <button type="button" class="remove-file" (click)="removeFile()">✕</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="logo-preview" *ngIf="previewUrl">
+      <label>Preview do Logo:</label>
+      <div class="preview-container">
+        <div class="preview-wrapper">
+          <img
+            [src]="previewUrl"
+            [alt]="form.get('nomeEmpresa')?.value"
+            class="preview-logo"
+            (error)="onImageError($event)"
+          />
+          <button type="button" class="remove-file" (click)="removeFile()" title="Remover imagem">✕</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="button" [disabled]="form.invalid || loading">
+        <i *ngIf="loading" class="fas fa-spinner fa-spin"></i>
+        {{ loading ? 'Salvando...' : 'Salvar Configuração' }}
+      </button>
+    </div>
+
+    <div *ngIf="mensagem" class="alert alert-success mt-3">{{ mensagem }}</div>
+    <div *ngIf="erro" class="alert alert-danger mt-3">{{ erro }}</div>
+  </form>
+</div>

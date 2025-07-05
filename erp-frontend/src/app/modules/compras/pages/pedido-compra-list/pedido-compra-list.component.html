@@ -1,0 +1,65 @@
+<div class="container-box">
+  <div class="card-header">
+    <h1><i class="fas fa-shopping-cart"></i> Pedidos de Compra</h1>
+    <button class="button" routerLink="/compras/pedidos-compra/novo">
+      <i class="fas fa-plus"></i> Novo Pedido
+    </button>
+  </div>
+
+  <p class="text-light">Gerencie seus pedidos de compra com fornecedores.</p>
+
+  <table *ngIf="pedidosCompra$ | async as pedidos; else loadingOrError" class="table-hover">
+    <thead>
+      <tr>
+        <th>Fornecedor</th>
+        <th>Data do Pedido</th>
+        <th>Valor Total</th>
+        <th>Status</th>
+        <th class="text-center">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let pedido of pedidos">
+        <td data-label="Fornecedor">{{ pedido.fornecedor?.razaoSocial || 'N/A' }}</td>
+        <td data-label="Data do Pedido">{{ pedido.dataPedido | date:'dd/MM/yyyy' }}</td>
+        <td data-label="Valor Total">{{ pedido.valorTotal | currency:'BRL' }}</td>
+        <td data-label="Status">
+          <span class="badge" [ngClass]="{
+            'success': pedido.status === 'APROVADO' || pedido.status === 'RECEBIDO_TOTAL',
+            'error': pedido.status === 'CANCELADO',
+            'warning': pedido.status === 'PENDENTE' || pedido.status === 'RECEBIDO_PARCIAL'
+          }">{{ pedido.status }}</span>
+        </td>
+        <td data-label="Ações" class="table-actions">
+          <button class="button icon-only" (click)="editarPedido(pedido.id)" title="Editar">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button *ngIf="pedido.status === 'PENDENTE'" class="button success icon-only" (click)="aprovarPedido(pedido.id)" title="Aprovar Pedido">
+            <i class="fas fa-check"></i>
+          </button>
+          <button *ngIf="pedido.status === 'APROVADO' || pedido.status === 'RECEBIDO_PARCIAL'" class="button primary icon-only" (click)="receberMercadorias(pedido.id)" title="Receber Mercadorias">
+            <i class="fas fa-box-open"></i>
+          </button>
+          <button *ngIf="pedido.status === 'PENDENTE' || pedido.status === 'APROVADO'" class="button error icon-only" (click)="cancelarPedido(pedido.id)" title="Cancelar Pedido">
+            <i class="fas fa-times"></i>
+          </button>
+          <button class="button error icon-only" (click)="deletarPedido(pedido.id)" title="Deletar">
+            <i class="fas fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="pedidos.length === 0">
+        <td colspan="5" class="text-center">Nenhum pedido de compra encontrado.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #loadingOrError>
+    <div class="text-center">
+      <app-loading *ngIf="!error; else errorState"></app-loading>
+      <ng-template #errorState>
+        <p class="text-error">Falha ao carregar pedidos de compra. Tente novamente mais tarde.</p>
+      </ng-template>
+    </div>
+  </ng-template>
+</div>

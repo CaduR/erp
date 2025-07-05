@@ -1,0 +1,35 @@
+<div class="container-box">
+  <div class="card-header">
+    <h1><i class="fas fa-file-invoice-dollar"></i> {{ isEditMode ? 'Editar Conta a Pagar' : 'Nova Conta a Pagar' }}</h1>
+  </div>
+
+  <form [formGroup]="contaPagarForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="descricao">Descrição</label>
+      <input id="descricao" formControlName="descricao" placeholder="Ex: Aluguel do escritório">
+    </div>
+
+    <div class="form-group">
+      <label for="valor">Valor</label>
+      <input id="valor" type="number" formControlName="valor" placeholder="0,00">
+    </div>
+
+    <div class="form-group">
+      <label for="dataVencimento">Data de Vencimento</label>
+      <input id="dataVencimento" type="date" formControlName="dataVencimento">
+    </div>
+
+    <div class="form-group">
+      <label for="fornecedorId">Fornecedor (Opcional)</label>
+      <select id="fornecedorId" formControlName="fornecedorId">
+        <option [ngValue]="null">Selecione um fornecedor</option>
+        <option *ngFor="let fornecedor of fornecedores$ | async" [ngValue]="fornecedor.id">{{ fornecedor.razaoSocial }}</option>
+      </select>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="button" [disabled]="contaPagarForm.invalid">Salvar</button>
+      <button type="button" class="button secondary" routerLink="/financeiro/contas-a-pagar">Cancelar</button>
+    </div>
+  </form>
+</div>
